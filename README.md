@@ -1,4 +1,5 @@
-作者频道https://www.youtube.com/@SHITOUGE    粉丝群：https://t.me/ROTOGE
+作者频道：https://www.youtube.com/@SHITOUGE
+- TG 粉丝交流群：https://t.me/ROTOGE
 ---
 
 ## 一、它是干嘛的
