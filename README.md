@@ -179,7 +179,6 @@ https://你的域名/<UUID>?format=base64 # 强制 base64
 - **优选无上限**：删掉下发条数截断，自填非空时不混入区域池
 - **分隔符容错**：支持中英文逗号和换行，`#` 误连两个 URL 时自动拆开
 - **明文节点**：按端口自动判定走明文还是 TLS（修掉了之前 workers.dev 判定写反的 bug）
-- **品牌节点**：`PREFERRED_LIST` 首条固定为「熊猫cloud三网机场」，订阅里置顶显示
 - **部署工具**：`tools/deploy-worker.mjs`，支持 deploy / vars / smoke0 / smoke1 / route / unroute / zones / list / delete
 
 轻量版本身没写版本号，这个版本号跟仓库里的 `src/console.js`（隧道控制台，版本常量 `1.2.1`）对齐，方便整套项目对版。
