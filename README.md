@@ -162,8 +162,7 @@ https://你的域名/<UUID>?format=base64 # 强制 base64
 
 | 现象 | 原因 | 处理 |
 |---|---|---|
-| 访问返回 **522** | 绑定的域没路由到 Worker（Route 被删或没建） | 去 Workers → Settings → Domains & Routes 看，确认是「自定义域」而不是只建了 Zone Route |
-| **不填 UUID 也能拿到节点** | 部署的是旧版实例（硬编码 UUID 还公开根路径） | 用当前主线重新部署，旧实例下线 |
+| 访问返回 **522** | 绑定的域没路由到 Worker（Route 被删或没建） | 去 Workers → Settings → Domains & Routes 看，确认是「自定义域」而不是只建了 Zone Route 
 | 明文节点连不上 | 域名的 Always Use HTTPS 没关，明文被 301 了 | 去 SSL/TLS → Edge Certificates 关掉，或者改用 TLS 端口 |
 | 订阅只下发了一部分节点 | 两个在线列表 URL 之间误用了 `#` 连接，锚点被丢掉 | 改用逗号分隔（代码现在会自动拆，但还是规范写） |
 | 节点数比填的少 | `host:port` 去重了，同 IP 同端口只留一条 | 让重复项端口不同，或删掉重复项 |
