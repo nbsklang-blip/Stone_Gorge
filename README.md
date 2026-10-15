@@ -181,5 +181,4 @@ https://你的域名/<UUID>?format=base64 # 强制 base64
 - **明文节点**：按端口自动判定走明文还是 TLS（修掉了之前 workers.dev 判定写反的 bug）
 - **部署工具**：`tools/deploy-worker.mjs`，支持 deploy / vars / smoke0 / smoke1 / route / unroute / zones / list / delete
 
-轻量版本身没写版本号，这个版本号跟仓库里的 `src/console.js`（隧道控制台，版本常量 `1.2.1`）对齐，方便整套项目对版。
 
