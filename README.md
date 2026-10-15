@@ -1,10 +1,3 @@
-# Stone Gorge · 轻量版
-
-单文件 Cloudflare Worker，把 Cloudflare 边缘节点当成出口用，走 VLESS over WebSocket。
-
-当前版本：**v1.2.1** ｜ 主线文件：`src/worker.js`（一个文件，直接粘进 Dashboard 就能用）
-
-说明一下：本文档只讲轻量版（`src/worker.js`）。同仓库还有一条独立的「隧道控制台」产品线（`src/console.js`，带网页面板和优选测速），两者互不相干。轻量版本身没有写版本号，这里的 v1.2.1 只是本仓库给当前主线打的标记。
 
 ---
 
