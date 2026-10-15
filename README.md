@@ -25,13 +25,13 @@
 
 ## 三、部署
 
-### 方式 A：Workers（推荐）
+### Workers（推荐）
 
 - 面板：新建 Worker → 粘代码 → Deploy → 绑自定义域
-- 脚本：`node tools/deploy-worker.mjs deploy <文件> <脚本名> UUID=<值>`（凭据从 `.env` 读，推荐）
+- 脚本：`node tools/deploy-worker.mjs deploy <文件> <脚本名> UUID=<值>`
 - Wrangler：`npx wrangler deploy`（仓库没带 wrangler.toml，得自己 init 一个）
 
-自定义域在 Worker 的 Settings → Domains & Routes 里绑。绑了自有域之后 `*.workers.dev` 那个子域可以关掉，而且自定义域才是推荐的形态（明文端口那节会讲为什么）。
+自定义域在 Worker 的 Settings → Domains & Routes 里绑。绑了自有域之后 `*.workers.dev` 那个子域可以关掉，而且自定义域才是推荐的形态。
 
 ---
 
