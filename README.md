@@ -2,7 +2,7 @@
 - TG 粉丝交流群：https://t.me/ROTOGE
 ---
 -单文件 Cloudflare Worker，把 Cloudflare 边缘节点当成出口用，走 VLESS over WebSocket。
--当前版本：v1.3.0「轮询优选版」 ｜ 主线文件：src/worker.js（一个文件，直接粘进 Dashboard 就能用）
+-当前版本：v1.3.0「轮询优选版」 ｜ （搭建的旧版本可以直接替换进老项目版本）
 ## 一、它是干嘛的
 
 一个跑在 Cloudflare 边缘上的 Worker，主要做这几件事：
