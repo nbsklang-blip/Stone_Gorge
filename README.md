@@ -1,7 +1,8 @@
 作者频道：https://www.youtube.com/@SHITOUGE
 - TG 粉丝交流群：https://t.me/ROTOGE
 ---
-
+-单文件 Cloudflare Worker，把 Cloudflare 边缘节点当成出口用，走 VLESS over WebSocket。
+-当前版本：v1.3.0「轮询优选版」 ｜ 主线文件：src/worker.js（一个文件，直接粘进 Dashboard 就能用）
 ## 一、它是干嘛的
 
 一个跑在 Cloudflare 边缘上的 Worker，主要做这几件事：
@@ -90,7 +91,12 @@ vless://<UUID>@<IP>:80?encryption=none&security=none&type=ws&host=<你的域名>
 - 条数不限：填多少发多少，不截断
 - 去重按 `host:port` 算，一样的只留一条。想加一条新节点而不是改个名，IP 或端口至少得有一个不一样
 - 你自填的列表只要非空，就完全不会去拉区域池（不会混进没验证过的 IP）；只有列表为空时才用实时区域池兜底
-
+- 当前内置列表
+- 共 300 条 原生 TLS 实测最快节点，命名为 优选1 ~ 优选300（香港 / 日本 / 美国 / 新加坡 各约 56 条，台湾 22 条，韩国 55 条），全部本机实测可达
+- 无固定品牌节点（v1.2.1 曾置顶「熊猫cloud三网机场」，v1.3.0 起移除，节点完全由实测优选池决定）
+区域池兜底源是 bestcf.pages.dev 上按地区分的几个 txt。刷新/重建列表用 node build/fetch-fast-nodes.mjs 60 6 build/avail/fastlist300.txt（6 区均衡凑 300，注：build/ 为本地临时目录不进 git），校验用 node tools/verify-preferred.mjs。
+提醒：区域池原始可用率只有六到八成，一定要先用 build-nodelist.mjs 预筛过再写进 PREFERRED_LIST，别直接把池子内容贴进来。
+节点传输方式：明文还是 TLS（看端口）
 
 ### 节点传输方式：明文还是 TLS（看端口）
 
@@ -175,6 +181,13 @@ https://你的域名/<UUID>?format=base64 # 强制 base64
 ## 十二、版本说明（v1.2.1）
 
 包含的能力：
+v1.3.0 相对 v1.2.1 的变化：
+- **内置节点扩至 300**：由原生 TLS 实测取最快（香港 / 日本 / 美国 / 新加坡 各约 56、台湾 22、韩国 55 条），命名 优选1 ~ 优选300
+- **新增轮询** / 负载均衡：移植 CFNext 的 polling + loadBalance 思路（无 KV 版），模块级游标旋转 + Fisher-Yates 打乱，每次订阅下发不同排列，分散连接、避免头部节点拥塞；POLL_WINDOW 可切子集轮询
+- **深化加固**：运行时自描述串（错误文案 / YAML 组名 / 区域标签 / 探测 URL / DOH UA / connect timeout）二次消隐；修复 _d 解码器 UTF-8 缺陷（中文节点名 / YAML 组名不再乱码）
+- **移除固定品牌节点**：v1.2.1 首条置顶的「熊猫cloud三网机场」在 v1.3.0 移除，节点完全由实测优选池决定
+- **验证脚本适配非确定性**：打乱导致订阅顺序不固定，verify-mask / verify-obfuscated 改为节点集合（顺序无关）对拍
+- v1.2.1（历史）
 - **UUID 门禁**：`UUID` 移出源码改成必填部署变量，没配就全站伪装页，根路径锁死
 - **内置伪装页**：自带默认页开箱即用，`MASK_HTML` / `MASK_URL` 可选覆盖
 - **优选无上限**：删掉下发条数截断，自填非空时不混入区域池
