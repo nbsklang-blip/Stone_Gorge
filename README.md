@@ -12,7 +12,7 @@
 |---|---|---|---|
 | 美国 | `random-region/US/100.txt` | 50 | `us1` ~ `us50` |
 | 中国香港 | `random-region/HK/100.txt` | 50 | `hk1` ~ `hk50` |
-| 韩国 | `random-region/KR/50.txt` | 34（候选仅 50，验活后剩 34，按规则全发） | `kr1` ~ `kr34` |
+| 韩国 | `random-region/KR/50.txt` | 34 | `kr1` ~ `kr34` |
 | 日本 | `random-region/JP/100.txt` | 50 | `jp1` ~ `jp50` |
 | 德国 | `random-region/DE/100.txt` | 50 | `de1` ~ `de50` |
 
