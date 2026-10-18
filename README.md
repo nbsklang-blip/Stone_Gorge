@@ -2,6 +2,7 @@
 - TG 粉丝交流群：https://t.me/ROTOGE
 ---
 -单文件 Cloudflare Worker，把 Cloudflare 边缘节点当成出口用，走 VLESS over WebSocket。
+## 更新日志
 ## [1.2.4]
 
 ### 变更 · 节点池换成五个地区源，每区最多 50 条
@@ -49,7 +50,7 @@ node tools/refresh-nodes.mjs <域名> \
 - 线上（`square-silence-b7a9` / `5.shitou555.kdns.fr`）：`/<UUID>` 下发 234 条，分区计数 US 50 / HK 50 / KR 34 / JP 50 / DE 50；YAML 235 个 name（234 节点 + 2 策略组）；`/<UUID>/ping` 正常；`smoke1` 5/0
 - 线上抽样 6 条（每区各取一条）真实 SNI 复验 6/6 通过
 
-## 更新日志
+
 -**v1.2.3**
 
 -**内置节点扩至 300**：由原生 TLS 实测取最快（香港 / 日本 / 美国 / 新加坡 各约 56、台湾 22、韩国 55 条），命名 优选1 ~ 优选300
