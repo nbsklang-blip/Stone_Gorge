@@ -2,7 +2,53 @@
 - TG 粉丝交流群：https://t.me/ROTOGE
 ---
 -单文件 Cloudflare Worker，把 Cloudflare 边缘节点当成出口用，走 VLESS over WebSocket。
--当前版本：v1.2.3「添加300节点版」 ｜ （搭建的旧版本可以直接替换进老代码继续使用）
+## [1.2.4]
+
+### 变更 · 节点池换成五个地区源，每区最多 50 条
+
+按地区取自 `bestcf.pages.dev`，清空原有 241 条后重建：
+
+| 地区 | 源 | 下发 | 命名 |
+|---|---|---|---|
+| 美国 | `random-region/US/100.txt` | 50 | `us1` ~ `us50` |
+| 中国香港 | `random-region/HK/100.txt` | 50 | `hk1` ~ `hk50` |
+| 韩国 | `random-region/KR/50.txt` | 34（候选仅 50，验活后剩 34，按规则全发） | `kr1` ~ `kr34` |
+| 日本 | `random-region/JP/100.txt` | 50 | `jp1` ~ `jp50` |
+| 德国 | `random-region/DE/100.txt` | 50 | `de1` ~ `de50` |
+
+合计 **234 条**，同区内按握手延迟升序编号（整体 158 ~ 2359 ms）。不足 50 条的区全部下发，不凑数。
+
+### 加固 · 验活标准抗抖动
+
+上一版「单次通过即入池」不够——实测抽查 15 个节点，10 分钟内就有 5 个失效（证书过期、证书域名不符、拒连）。
+中转池本来就抖，且粗筛短时间连太多次会被中转侧按源 IP 限速。现在改成三层：
+
+- **单点**：每个候选最多验 3 次，**至少 2 次成功**才算通过；证书类硬错（`ALTNAME` / `EXPIRED` / `SELF_SIGNED` / 链不完整）出现一次即淘汰，不再重试。
+- **冷却复验**：定稿前等 `--cool`（默认 25 秒）再对入选集合整批复验一遍，两轮都活的才下发（本次 337 条复验通过 336）。
+- **判定内容**仍是：订阅域名做 SNI → 校验证书 → `GET /` 要求 2xx。
+
+### 工具 · `refresh-nodes.mjs` 支持地区模式
+
+```bash
+node tools/refresh-nodes.mjs <域名> \
+  --region=us:https://.../US/100.txt --region=hk:https://.../HK/100.txt \
+  --per=50 --write
+```
+
+`--per` 每区上限、`--tries/--need` 抗抖参数、`--cool` 冷却秒数、`--no-recheck` 关复验；
+不带 `--region` 时行为不变（订阅 / 文件 / 补池三种候选来源，命名 `优选N`）。
+
+### 修订 · 验证器不再假设节点名以「优选」开头
+
+`verify-pages.mjs` 原先按 `/优选/` 前缀过滤 YAML 里的节点名，换成分区命名后误判成 0 条。
+改为以明文订阅里的 `#` 备注为基准做集合比对，命名规则变化不再影响断言。
+
+### 验证
+
+- 六道闸门全绿：`harden --check` 幂等 PASS / `scan-signals` 0 处 / `verify-mask` 36 / `verify-preferred` 25 / `verify-obfuscated` 11 / `verify-pages` 55
+- 线上（`square-silence-b7a9` / `5.shitou555.kdns.fr`）：`/<UUID>` 下发 234 条，分区计数 US 50 / HK 50 / KR 34 / JP 50 / DE 50；YAML 235 个 name（234 节点 + 2 策略组）；`/<UUID>/ping` 正常；`smoke1` 5/0
+- 线上抽样 6 条（每区各取一条）真实 SNI 复验 6/6 通过
+
 ## 更新日志
 -**v1.2.3**
 
